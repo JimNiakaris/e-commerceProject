@@ -14,7 +14,7 @@ namespace e_commerce_Infrastructure.Config
     {
         public void Configure(EntityTypeBuilder<Product> builder)
         {
-            builder.Property(p => p.price).HasColumnType("decimal(18,2)");
+            builder.Property(p => p.Price).HasColumnType("decimal(18,2)");
         }
     }
 }
