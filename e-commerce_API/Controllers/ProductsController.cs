@@ -1,4 +1,5 @@
 ﻿using e_commerce_Core.Entities;
+using e_commerce_Core.Interfaces;
 using e_commerce_Infrastructure.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -7,26 +8,30 @@ namespace e_commerce_API.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class ProductsController : ControllerBase
+    public class ProductsController(IProductRepository repo) : ControllerBase
     {
-        private readonly StoreContext _context;
 
-        //dependency injection
-        public ProductsController(StoreContext context)
-        {
-            _context = context;
-        }
+        //this is commented out because we are going to use the primary constructor 
+        //like we did in the ProductReposiroty
+        //Now we are going to inject the IRepository in the Controller using primary constructor
+        //private readonly StoreContext _context;
+
+        ////dependency injection
+        //public ProductsController(StoreContext context)
+        //{
+        //    _context = context;
+        //}
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Product>>> GetProducts()
+        public async Task<ActionResult<IReadOnlyList<Product>>> GetProducts()
         {
-            return await _context.Products.ToListAsync();
+            return Ok(await repo.GetProductsAsync());
         }
 
         [HttpGet("{id:int}")]
         public async Task<ActionResult<Product>> GetProduct(int id)
         {
-            var product = await _context.Products.FindAsync(id);
+            var product = await repo.GetProductByIdAsync(id);
             if(product == null) return NotFound();
             return product;
         }
@@ -34,9 +39,15 @@ namespace e_commerce_API.Controllers
         [HttpPost]
         public async Task<ActionResult<Product>> CreateProduct (Product product)
         {
-            _context.Products.Add(product);
-            await _context.SaveChangesAsync();
-            return product;
+            repo.AddProduct(product);
+
+            if (await repo.SaveChangesAsync())
+            {
+                //CreatedAtAction gets as input an ActionResult in this case the GetProduct action of the controller
+                //we specify the id which is the id of the newly created product and the return object
+                return CreatedAtAction("GetProduct", new { id = product.Id }, product);
+            }
+            return BadRequest("Error on Creating the new Product");
         }
 
         [HttpPut("{id:int}")]
@@ -47,29 +58,36 @@ namespace e_commerce_API.Controllers
                 return BadRequest("Can not update this product");
             }
 
-            _context.Entry(product).State = EntityState.Modified;
+            repo.UpdateProduct(product);
 
-            await _context.SaveChangesAsync();
+            if(await repo.SaveChangesAsync())
+            {
+                return NoContent();
+            }
 
-            return NoContent();
+            return BadRequest("Error on updating the Product");
         } 
         private bool ProductExtists(int id)
         {
-            return _context.Products.Any(x => x.Id == id);
+            return repo.ProductExists(id);
         }
 
         [HttpDelete("{id:int}")]
         public async Task<ActionResult> DeleteProduct(int id)
         {
-            var product = await _context.Products.FindAsync(id);
+            var product = await repo.GetProductByIdAsync (id);
 
             if(product == null) return NotFound();
 
-            _context.Products.Remove(product);
+            repo.DeleteProduct(product);
 
-            await _context.SaveChangesAsync();
+            if (await repo.SaveChangesAsync())
+            {
+                return NoContent();
+            }
 
-            return NoContent();
+            return BadRequest("Error on deleting the Product");
+
         }
     }
 }

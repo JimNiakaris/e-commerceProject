@@ -1,4 +1,5 @@
 
+using e_commerce_Core.Interfaces;
 using e_commerce_Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 
@@ -20,6 +21,9 @@ namespace e_commerce_API
             );
             // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
             //builder.Services.AddOpenApi();
+            builder.Services.AddScoped<IProductRepository, ProductRepository>(); 
+            //with add scoped we specify that the service is available
+            //for as long as the http request lives
 
             var app = builder.Build();
 
