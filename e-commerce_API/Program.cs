@@ -1,6 +1,7 @@
 
 using e_commerce_Core.Interfaces;
 using e_commerce_Infrastructure.Data;
+using e_commerce_Infrastructure.Data.Repositories;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 

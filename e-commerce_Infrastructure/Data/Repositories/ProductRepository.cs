@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace e_commerce_Infrastructure.Data
+namespace e_commerce_Infrastructure.Data.Repositories
 {
     public class ProductRepository(StoreContext context) : IProductRepository
     {

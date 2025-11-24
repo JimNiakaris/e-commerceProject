@@ -8,7 +8,7 @@ namespace e_commerce_API.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class ProductsController(IProductRepository repo) : ControllerBase
+    public class ProductsController(IGenericRepository<Product> repo) : ControllerBase
     {
 
         //this is commented out because we are going to use the primary constructor 
@@ -25,13 +25,13 @@ namespace e_commerce_API.Controllers
         [HttpGet]
         public async Task<ActionResult<IReadOnlyList<Product>>> GetProducts(string? brand, string? type, string? sort)
         {
-            return Ok(await repo.GetProductsAsync(brand,type,sort));
+            return Ok(await repo.ListAllAsync());
         }
 
         [HttpGet("{id:int}")]
         public async Task<ActionResult<Product>> GetProduct(int id)
         {
-            var product = await repo.GetProductByIdAsync(id);
+            var product = await repo.GetByIdAsync(id);
             if(product == null) return NotFound();
             return product; 
         }
@@ -39,9 +39,9 @@ namespace e_commerce_API.Controllers
         [HttpPost]
         public async Task<ActionResult<Product>> CreateProduct (Product product)
         {
-            repo.AddProduct(product);
+            repo.Add(product);
 
-            if (await repo.SaveChangesAsync())
+            if (await repo.SaveAllAsync())
             {
                 //CreatedAtAction gets as input an ActionResult in this case the GetProduct action of the controller
                 //we specify the id which is the id of the newly created product and the return object
@@ -58,9 +58,9 @@ namespace e_commerce_API.Controllers
                 return BadRequest("Can not update this product");
             }
 
-            repo.UpdateProduct(product);
+            repo.Update(product);
 
-            if(await repo.SaveChangesAsync())
+            if(await repo.SaveAllAsync())
             {
                 return NoContent();
             }
@@ -69,19 +69,19 @@ namespace e_commerce_API.Controllers
         } 
         private bool ProductExtists(int id)
         {
-            return repo.ProductExists(id);
+            return repo.Exists(id);
         }
 
         [HttpDelete("{id:int}")]
         public async Task<ActionResult> DeleteProduct(int id)
         {
-            var product = await repo.GetProductByIdAsync (id);
+            var product = await repo.GetByIdAsync(id);
 
             if(product == null) return NotFound();
 
-            repo.DeleteProduct(product);
+            repo.Remove(product);
 
-            if (await repo.SaveChangesAsync())
+            if (await repo.SaveAllAsync())
             {
                 return NoContent();
             }
@@ -93,13 +93,13 @@ namespace e_commerce_API.Controllers
         [HttpGet("brands")]
         public async Task<ActionResult<IReadOnlyList<string>>> GetBrands()
         {
-            return Ok(await repo.GetBrandsAsync());
+            return Ok(/*await repo.GetBrandsAsync()*/);
         }
 
         [HttpGet("types")]
         public async Task<ActionResult<IReadOnlyList<string>>> GetTypes()
         {
-            return Ok(await repo.GetTypesAsync());
+            return Ok(/*await repo.GetTypesAsync()*/);
         }
     }
 }
