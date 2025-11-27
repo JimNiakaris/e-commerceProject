@@ -25,5 +25,10 @@ namespace e_commerce_Core.Specifications
         }
 
         public Expression<Func<T, bool>>? Criteria => criteria;
+
+        public Expression<Func<T, object>>? OrderBy {get; private set;}
+
+        public Expression<Func<T, object>>? OrderByDesc { get; private set; }
+
     }
 }
