@@ -30,5 +30,14 @@ namespace e_commerce_Core.Specifications
 
         public Expression<Func<T, object>>? OrderByDesc { get; private set; }
 
+        protected void AddOrderBy(Expression<Func<T, object>>? orderByExpression)
+        {
+            OrderBy = orderByExpression;
+        }
+
+        protected void AddOrderByDesc(Expression<Func<T, object>>? orderByDescExpression)
+        {
+            OrderByDesc = orderByDescExpression;
+        }
     }
 }

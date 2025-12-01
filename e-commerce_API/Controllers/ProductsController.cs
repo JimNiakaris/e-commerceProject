@@ -26,7 +26,7 @@ namespace e_commerce_API.Controllers
         [HttpGet]
         public async Task<ActionResult<IReadOnlyList<Product>>> GetProducts(string? brand, string? type, string? sort)
         {
-            var spec = new ProductSpecification(brand, type);
+            var spec = new ProductSpecification(brand, type,sort); //creating the expression we need to pass to the repository
             var products = await repo.ListAsync(spec);
             return Ok(products);
         }

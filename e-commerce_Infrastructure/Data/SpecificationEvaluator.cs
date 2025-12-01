@@ -22,7 +22,19 @@ namespace e_commerce_Infrastructure.Data
                 //    query = query.Where(b => b.Brand == brand);
                 //}
             }
+
+            if (spec.OrderBy != null)
+            {
+                query = query.OrderBy(spec.OrderBy);
+            }
+
+            if (spec.OrderByDesc!= null)
+            {
+                query = query.OrderByDescending(spec.OrderByDesc);
+            }
+
             return query;
         }
+
     }
 }
