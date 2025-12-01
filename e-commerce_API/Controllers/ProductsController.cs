@@ -9,7 +9,8 @@ namespace e_commerce_API.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class ProductsController(IGenericRepository<Product> repo) : ControllerBase
+    public class ProductsController(IGenericRepository<Product> repo) : ControllerBase 
+        //no longer using the Product Repository but the Generic Repository with Product Entity
     {
 
         //this is commented out because we are going to use the primary constructor 

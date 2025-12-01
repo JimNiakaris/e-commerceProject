@@ -36,5 +36,37 @@ namespace e_commerce_Infrastructure.Data
             return query;
         }
 
+        public static IQueryable<TResult> GetQuery<TSpec,TResult>(IQueryable<T> query, ISpecification<T,TResult> spec)
+        {
+            if (spec.Criteria != null)
+            {
+                query = query.Where(spec.Criteria);
+                //it's like doing this
+                //var query = context.Products.AsQueryable();
+                //if (!string.IsNullOrWhiteSpace(brand))
+                //{
+                //    query = query.Where(b => b.Brand == brand);
+                //}
+            }
+
+            if (spec.OrderBy != null)
+            {
+                query = query.OrderBy(spec.OrderBy);
+            }
+
+            if (spec.OrderByDesc != null)
+            {
+                query = query.OrderByDescending(spec.OrderByDesc);
+            }
+
+            var selectQuery = query as IQueryable<TResult>;
+
+            if (selectQuery != null)
+            {
+                selectQuery = query.Select(spec.Select);
+            }
+
+            return selectQuery ?? query .Cast<TResult>();
+        }
     }
 }

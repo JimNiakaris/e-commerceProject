@@ -13,4 +13,9 @@ namespace e_commerce_Core.Interfaces
         Expression<Func<T, object>> ?OrderBy { get; }
         Expression<Func<T, object>> ?OrderByDesc { get; }
     }
+
+    public interface ISpecification<T, TResult> : ISpecification<T>
+    {
+         Expression<Func<T,TResult>>? Select {  get; }
+    }
 }
