@@ -30,6 +30,8 @@ namespace e_commerce_Core.Specifications
 
         public Expression<Func<T, object>>? OrderByDesc { get; private set; }
 
+        public bool IsDistinct {  get; private set; }
+
         protected void AddOrderBy(Expression<Func<T, object>>? orderByExpression)
         {
             OrderBy = orderByExpression;
@@ -39,11 +41,20 @@ namespace e_commerce_Core.Specifications
         {
             OrderByDesc = orderByDescExpression;
         }
+
+        protected void ApplyDistict()
+        {
+            IsDistinct = true;
+        }
     }
 
     public class BaseSpecification<T, TResult>(Expression<Func<T, bool>> criteria) : BaseSpecification<T>(criteria), ISpecification<T, TResult>
     {
         public Expression<Func<T, TResult>>? Select { get; private set;}
+        protected BaseSpecification() : this(null) //we can make criteria optional in the primary constructor
+        {
+
+        }
 
         protected void AddSelect(Expression<Func<T,TResult>> selectExpression)
         {

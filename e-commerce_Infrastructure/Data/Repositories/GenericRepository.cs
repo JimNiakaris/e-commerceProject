@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace e_commerce_Infrastructure.Data.Repositories
 {
-    public class GenericRepository<T> (StoreContext context) : IGenericRepository<T> where T : BaseEntity
+    public class GenericRepository<T>(StoreContext context) : IGenericRepository<T> where T : BaseEntity
     {
         public void Add(T entity)
         {
@@ -18,7 +18,7 @@ namespace e_commerce_Infrastructure.Data.Repositories
 
         public bool Exists(int id)
         {
-            return context.Set<T>().Any(x=>x.Id == id);
+            return context.Set<T>().Any(x => x.Id == id);
         }
 
         public async Task<T?> GetByIdAsync(int id)
@@ -31,6 +31,11 @@ namespace e_commerce_Infrastructure.Data.Repositories
             return await ApplySpecification(spec).FirstOrDefaultAsync();
         }
 
+        public async Task<TResult?> GetEntityWithSpec<TResult>(ISpecification<T, TResult> spec)
+        {
+            return await ApplySpecification<TResult>(spec).FirstOrDefaultAsync();
+        }
+
         public async Task<IReadOnlyList<T>> ListAllAsync()
         {
             return await context.Set<T>().ToListAsync();
@@ -41,6 +46,11 @@ namespace e_commerce_Infrastructure.Data.Repositories
             return await ApplySpecification(spec).ToListAsync();
         }
 
+        public async Task<IReadOnlyList<TResult>> ListAsync<TResult>(ISpecification<T, TResult> spec)
+        {
+            return await ApplySpecification<TResult>(spec).ToListAsync();
+        }
+
         public void Remove(T entity)
         {
             context.Set<T>().Remove(entity);
@@ -48,7 +58,7 @@ namespace e_commerce_Infrastructure.Data.Repositories
 
         public async Task<bool> SaveAllAsync()
         {
-            return await context.SaveChangesAsync()>0;
+            return await context.SaveChangesAsync() > 0;
         }
 
         public void Update(T entity)
@@ -60,6 +70,11 @@ namespace e_commerce_Infrastructure.Data.Repositories
         private IQueryable<T> ApplySpecification(ISpecification<T> spec)
         {
             return SpecificationEvaluator<T>.GetQuery(context.Set<T>().AsQueryable(), spec);
+        }
+
+        private IQueryable<TResult> ApplySpecification<TResult>(ISpecification<T, TResult> spec)
+        {
+            return SpecificationEvaluator<T>.GetQuery<T, TResult>(context.Set<T>().AsQueryable(), spec);
         }
     }
 }

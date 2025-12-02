@@ -33,6 +33,11 @@ namespace e_commerce_Infrastructure.Data
                 query = query.OrderByDescending(spec.OrderByDesc);
             }
 
+            if (spec.IsDistinct)
+            {
+                query = query.Distinct();
+            }
+
             return query;
         }
 
@@ -61,9 +66,13 @@ namespace e_commerce_Infrastructure.Data
 
             var selectQuery = query as IQueryable<TResult>;
 
-            if (selectQuery != null)
+            if (spec.Select != null)
             {
                 selectQuery = query.Select(spec.Select);
+            }
+            if (spec.IsDistinct)
+            {
+                selectQuery = selectQuery?.Distinct();
             }
 
             return selectQuery ?? query .Cast<TResult>();

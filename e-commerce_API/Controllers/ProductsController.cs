@@ -27,7 +27,12 @@ namespace e_commerce_API.Controllers
         [HttpGet]
         public async Task<ActionResult<IReadOnlyList<Product>>> GetProducts(string? brand, string? type, string? sort)
         {
-            var spec = new ProductSpecification(brand, type,sort); //creating the expression we need to pass to the repository
+            //creating the expression we need to pass to the GENERIC repository
+            //this is done in the ProductSpcification deriving from BaseSpecification
+            //The ProductSpecification gets the Filters, brand,type
+            var spec = new ProductSpecification(brand, type,sort); 
+            //the spec is used in the GenericRepository that gets the type off Products
+            //the ListAsync is defined to use an Expression as a parameter, named spec
             var products = await repo.ListAsync(spec);
             return Ok(products);
         }
@@ -97,13 +102,15 @@ namespace e_commerce_API.Controllers
         [HttpGet("brands")]
         public async Task<ActionResult<IReadOnlyList<string>>> GetBrands()
         {
-            return Ok(/*await repo.GetBrandsAsync()*/);
+            var spec = new BrandListSpecification();
+            return Ok(await repo.ListAsync(spec));
         }
 
         [HttpGet("types")]
         public async Task<ActionResult<IReadOnlyList<string>>> GetTypes()
         {
-            return Ok(/*await repo.GetTypesAsync()*/);
+            var spec = new TypeListSpecification();
+            return Ok(await repo.ListAsync(spec));
         }
     }
 }
