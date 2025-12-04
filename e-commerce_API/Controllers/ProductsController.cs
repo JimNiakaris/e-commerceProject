@@ -4,6 +4,7 @@ using e_commerce_Core.Specifications;
 using e_commerce_Infrastructure.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Diagnostics.CodeAnalysis;
 
 namespace e_commerce_API.Controllers
 {
@@ -24,13 +25,13 @@ namespace e_commerce_API.Controllers
         //    _context = context;
         //}
 
-        [HttpGet]
-        public async Task<ActionResult<IReadOnlyList<Product>>> GetProducts(string? brand, string? type, string? sort)
+        [HttpGet]                                               //now we can pass the object in the controller
+        public async Task<ActionResult<IReadOnlyList<Product>>> GetProducts([FromQuery]ProductSpecificationParameters specParameters)
         {
             //creating the expression we need to pass to the GENERIC repository
             //this is done in the ProductSpcification deriving from BaseSpecification
             //The ProductSpecification gets the Filters, brand,type
-            var spec = new ProductSpecification(brand, type,sort); 
+            var spec = new ProductSpecification(specParameters); 
             //the spec is used in the GenericRepository that gets the type off Products
             //the ListAsync is defined to use an Expression as a parameter, named spec
             var products = await repo.ListAsync(spec);

@@ -43,6 +43,8 @@ namespace e_commerce_API
 
             app.MapControllers();
 
+            //creating a new scope so we can use our DbContext to Delete and recreate the database by applying all the migrations
+            //and then seed the predefined data to the Database
             try
             {
                 using var scope = app.Services.CreateScope();
