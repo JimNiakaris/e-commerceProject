@@ -1,4 +1,5 @@
 
+using e_commerce_API.Middleware;
 using e_commerce_Core.Interfaces;
 using e_commerce_Infrastructure.Data;
 using e_commerce_Infrastructure.Data.Repositories;
@@ -31,6 +32,7 @@ namespace e_commerce_API
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
+            app.UseMiddleware<ExceptionMiddleware>();
             if (app.Environment.IsDevelopment())
             {
                 
