@@ -23,8 +23,6 @@ namespace e_commerce_Core.Specifications
 
 
 
-
-
         private List<string> _brands = [];
         public List<string> Brands
         {
@@ -49,5 +47,12 @@ namespace e_commerce_Core.Specifications
         }
 
         public string? Sort { get; set; }
+
+        private string? _search;
+        public string? Search
+        {
+            get => _search ?? "";
+            set => _search = value;
+        }
     }
 }

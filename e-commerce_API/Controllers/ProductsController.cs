@@ -1,4 +1,5 @@
-﻿using e_commerce_Core.Entities;
+﻿using e_commerce_API.HelperMethods;
+using e_commerce_Core.Entities;
 using e_commerce_Core.Interfaces;
 using e_commerce_Core.Specifications;
 using e_commerce_Infrastructure.Data;
@@ -8,9 +9,8 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace e_commerce_API.Controllers
 {
-    [ApiController]
-    [Route("api/[controller]")]
-    public class ProductsController(IGenericRepository<Product> repo) : ControllerBase 
+
+    public class ProductsController(IGenericRepository<Product> repo) : BaseAPIController 
         //no longer using the Product Repository but the Generic Repository with Product Entity
     {
 
@@ -31,11 +31,21 @@ namespace e_commerce_API.Controllers
             //creating the expression we need to pass to the GENERIC repository
             //this is done in the ProductSpcification deriving from BaseSpecification
             //The ProductSpecification gets the Filters, brand,type
-            var spec = new ProductSpecification(specParameters); 
+            var spec = new ProductSpecification(specParameters);
             //the spec is used in the GenericRepository that gets the type off Products
             //the ListAsync is defined to use an Expression as a parameter, named spec
-            var products = await repo.ListAsync(spec);
-            return Ok(products);
+            #region this is done in the base controller now
+            //var products = await repo.ListAsync(spec);
+            //var count = await repo.CountAsync(spec);
+
+            //var pagination = new PaginationHelper<Product>(specParameters.PageIndex, specParameters.PageSize, count, products);
+            
+
+            //return Ok(products);
+            //return Ok(pagination);
+            #endregion
+
+            return await CreatePageResult<Product>(repo, spec,specParameters.PageIndex,specParameters.PageSize);
         }
 
         [HttpGet("{id:int}")]

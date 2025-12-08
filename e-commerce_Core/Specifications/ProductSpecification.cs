@@ -19,6 +19,7 @@ namespace e_commerce_Core.Specifications
 
         public ProductSpecification(ProductSpecificationParameters specParameters) //instead of passing each parameter we are gonna pass a list of an object
             : base(x=>
+            (string.IsNullOrEmpty(specParameters.Search)|| x.Name.Contains(specParameters.Search.ToLower())) &&
             (!specParameters.Brands.Any() || specParameters.Brands.Contains(x.Brand)) &&  //we change the way the criteria are passed into the base specification
             (!specParameters.Types.Any() || specParameters.Types.Contains(x.Type)))
         {
