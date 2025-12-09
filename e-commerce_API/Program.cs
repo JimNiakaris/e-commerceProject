@@ -28,11 +28,15 @@ namespace e_commerce_API
             //with add scoped we specify that the service is available
             //for as long as the http request lives
             builder.Services.AddScoped(typeof(IGenericRepository<>),typeof(GenericRepository<>)); //using typeoff because we dont actually know the type of the generic
+            builder.Services.AddCors(); //injecting CORS, Cross Origin Recourse Sharing
 
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
             app.UseMiddleware<ExceptionMiddleware>();
+            //using CORS middleware before Exception middleware
+            app.UseCors(c => c.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost:4200", "https://localhost:4200"));
+
             if (app.Environment.IsDevelopment())
             {
                 

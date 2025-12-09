@@ -1,4 +1,5 @@
-﻿using e_commerce_Core.Entities;
+﻿using e_commerce_API.DTO;
+using e_commerce_Core.Entities;
 using Microsoft.AspNetCore.Mvc;
 
 namespace e_commerce_API.Controllers
@@ -30,7 +31,7 @@ namespace e_commerce_API.Controllers
         }
 
         [HttpPost("validationerror")]
-        public IActionResult GetValidationError(Product product)
+        public IActionResult GetValidationError(CreateProductDTO productDTO)
         {
             return Ok();
         }

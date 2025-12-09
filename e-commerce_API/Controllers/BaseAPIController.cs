@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace e_commerce_API.Controllers
 {
-    [ApiController]
+    [ApiController]  // the ApiController decoration can handle model state errors 
     [Route("api/[controller]")]
     public class BaseAPIController :ControllerBase
     {
