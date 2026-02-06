@@ -17,10 +17,11 @@ export class AppComponent implements OnInit{
   private http = inject(HttpClient);
   title = ('e-commerce_Client');
   products: Product[] = [];
+  //products = signal<Product[]>([]); with NO zonechange detection
 
   ngOnInit(): void {
    this.http.get<Pagination<Product>>(this.baseUrl+'products').subscribe({
-    next: response => this.products = response.data,
+    next: response => this.products = response.data, //next: response => this.products.set(response.data), with NO zonechange detection
     error: error => console.log(error),
     complete: ()=>console.log('complete')
     
