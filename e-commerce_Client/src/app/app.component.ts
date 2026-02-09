@@ -5,27 +5,16 @@ import { HttpClient } from '@angular/common/http';
 import { concat } from 'rxjs';
 import { Product } from './shared/models/product';
 import { Pagination } from './shared/models/pagination';
+import { ShopService } from './core/service/shop.service';
+import { ShopComponent } from "./features/shop/shop.component";
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet,HeaderComponent],
+  imports: [RouterOutlet, HeaderComponent, ShopComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
-export class AppComponent implements OnInit{
-  baseUrl = "https://localhost:7126/api/"
-  private http = inject(HttpClient);
-  title = ('e-commerce_Client');
-  products: Product[] = [];
-  //products = signal<Product[]>([]); with NO zonechange detection
-
-  ngOnInit(): void {
-   this.http.get<Pagination<Product>>(this.baseUrl+'products').subscribe({
-    next: response => this.products = response.data, //next: response => this.products.set(response.data), with NO zonechange detection
-    error: error => console.log(error),
-    complete: ()=>console.log('complete')
-    
-   })
-  }
+export class AppComponent {
+title = 'e-commerce'
 
 }
