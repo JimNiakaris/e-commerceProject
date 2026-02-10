@@ -3,29 +3,59 @@ import { ShopService } from '../../core/service/shop.service';
 import { Product } from '../../shared/models/product';
 import { MatCard } from '@angular/material/card';
 import { ProductItemComponent } from "./product-item/product-item.component";
+import { MatDialog } from '@angular/material/dialog';
+import { FiltersDialogComponent } from './filters-dialog/filters-dialog.component';
+import { MatButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
 
 @Component({
   selector: 'app-shop',
-  imports: [MatCard, ProductItemComponent],
+  imports: [MatCard, ProductItemComponent, MatButton, MatIcon],
   templateUrl: './shop.component.html',
   styleUrl: './shop.component.scss',
 })
-export class ShopComponent implements OnInit{
+export class ShopComponent implements OnInit {
   baseUrl = "https://localhost:7126/api/"
   private shopService = inject(ShopService)
+  private dialogeService = inject(MatDialog)
   products: Product[] = [];
+  selectedBrands: string[] = []
+  selectedTypes: string[] = []
   //products = signal<Product[]>([]); with NO zonechange detection
 
   ngOnInit(): void {
     this.initializeShop();
   }
 
-  initializeShop(){
+  initializeShop() {
     this.shopService.getBrands();
     this.shopService.getTypes();
     this.shopService.getProducts().subscribe({
-    next: response => this.products = response.data, //next: response => this.products.set(response.data), with NO zonechange detection
-    error: error => console.log(error) 
-   })
+      next: response => this.products = response.data, //next: response => this.products.set(response.data), with NO zonechange detection
+      error: error => console.log(error)
+    })
+  }
+
+  openFiltersDialog() {
+    const dialogRef = this.dialogeService.open(FiltersDialogComponent, {
+      minWidth: '500px',
+      data: {
+        selectedBrands: this.selectedBrands,
+        selectedTypes: this.selectedTypes
+      }
+    });
+    dialogRef.afterClosed().subscribe({
+      next: result=> {
+        if(result) {
+          console.log(result);
+          this.selectedBrands = result.selectedBrands;
+          this.selectedTypes = result.selectedTypes;
+          this.shopService.getProducts(this.selectedBrands,this.selectedTypes).subscribe({
+            next: response => this.products = response.data,
+            error: error=> console.log(error)
+          });
+        }
+      }
+    })
   }
 }
