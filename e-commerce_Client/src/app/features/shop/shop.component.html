@@ -1,3 +1,4 @@
+@if(products) {
 <div class="flex flex-col gap-3">
     <div class="flex justify-between items-center gap-4">
         <mat-paginator (page)="handlePageEvent($event)" [length]="products?.count" [pageSize]="shopParams.pageSize"
@@ -45,3 +46,5 @@
         }
     </mat-selection-list>
 </mat-menu>
+}
+
