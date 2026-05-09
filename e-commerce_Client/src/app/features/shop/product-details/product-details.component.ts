@@ -5,12 +5,13 @@ import { Product } from '../../../shared/models/product';
 import { CurrencyPipe } from '@angular/common';
 import { MatButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
-import { MatFormField } from '@angular/material/select';
+import { MatFormField, MatLabel } from '@angular/material/select';
 import { MatInput } from '@angular/material/input';
+import { MatDivider } from "@angular/material/divider";
 
 @Component({
   selector: 'app-product-details',
-  imports: [CurrencyPipe,MatButton,MatIcon, MatFormField,MatInput],
+  imports: [CurrencyPipe, MatButton, MatIcon, MatFormField, MatInput, MatLabel, MatDivider],
   templateUrl: './product-details.component.html',
   styleUrl: './product-details.component.scss',
 })
