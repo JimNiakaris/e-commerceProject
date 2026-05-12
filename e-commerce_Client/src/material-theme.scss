@@ -13,9 +13,26 @@
     outlined-container-shape: 6px,
   ));
     @include mat.badge-overrides((
-    background-color: rgb(37, 118, 145),
+    background-color: rgb(32, 117, 148),
     disabled-state-background-color: red,
   ));
+
+  .snack-error{
+  @include mat.snack-bar-overrides((
+    button-color: orange,
+    container-color: red,
+    supporting-text-color: white
+  ));
+  }
+
+  .snack-success{
+  @include mat.snack-bar-overrides((
+    button-color: rgb(221, 203, 170),
+    container-color: rgb(21, 255, 0),
+    supporting-text-color: white
+  ));
+  }
+
 }
 
 html {
